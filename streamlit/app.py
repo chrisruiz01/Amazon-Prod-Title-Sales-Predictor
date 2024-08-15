@@ -7,6 +7,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import streamlit as st
 
 model = load_model('model_objects/model.h5')
+
 with open("model_objects/X_tokenizer.pickle", 'rb') as file:
     tokenizer = pickle.load(file)
 
