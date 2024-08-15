@@ -1,9 +1,10 @@
 import os
 
-import streamlit as st
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pickle
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import streamlit as st
 
 model = load_model('model_objects/model.h5')
 with open("model_objects/X_tokenizer.pickle", 'rb') as file:
@@ -63,3 +64,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
