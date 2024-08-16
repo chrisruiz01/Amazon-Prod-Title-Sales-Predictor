@@ -1,25 +1,32 @@
-import os
-
 import pickle
 from tensorflow.keras.models import load_model
-# from tensorflow.keras.preprocessing.text import Tokenizer
-from keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.layers import TextVectorization
 import streamlit as st
 
 model = load_model('model_objects/model.h5')
 
-with open("model_objects/X_tokenizer.pickle", 'rb') as file:
-    tokenizer = pickle.load(file)
+# Load the vocabulary
+with open("model_objects/vectorizer_vocabulary.pickle", 'rb') as file:
+    loaded_vocab = pickle.load(file)
 
-# Define maximum length for sequences
-max_len = 32
+# Define the TextVectorization layer with the loaded vocabulary
+max_features = 10000  # Ensure this matches what you used during training
+max_text_length = 32  # Ensure this matches what you used during training
+
+vectorizer = TextVectorization(
+    max_tokens=max_features,
+    output_mode='int',
+    output_sequence_length=max_text_length,
+    vocabulary=loaded_vocab
+)
 
 # Function to preprocess text input
 def preprocess(text):
-    sequences = tokenizer.texts_to_sequences([text])  # Wrap text in a list
-    padded_sequences = pad_sequences(sequences, maxlen=max_len)
-    return padded_sequences
+    sequences = vectorizer([text])
+    return sequences.numpy()
+    # sequences = tokenizer.texts_to_sequences([text])  # Wrap text in a list
+    # padded_sequences = pad_sequences(sequences, maxlen=max_len)
+    # return padded_sequences
 
 # Function to get predictions from the model
 def get_predictions(text):
@@ -66,4 +73,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
